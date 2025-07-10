@@ -71,6 +71,8 @@ fun App() {
                         .aspectRatio(1f)
                 )
 
+                Text("Values must be between 0.0 and 1.0")
+
                 LazyVerticalGrid(
                     columns = GridCells.Fixed(5)
                 ) {
@@ -88,7 +90,6 @@ fun App() {
                                             ?.coerceIn(0f, 1f)
                                             ?: value
                                     },
-                                    prefix = { Text("0.0-1.0") },
                                     suffix = { Text("F") },
                                     keyboardOptions = KeyboardOptions(
                                         keyboardType = KeyboardType.Number
