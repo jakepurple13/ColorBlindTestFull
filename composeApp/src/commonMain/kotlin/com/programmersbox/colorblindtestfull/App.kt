@@ -196,6 +196,17 @@ fun App() {
                                             ?.coerceIn(0f, 1f)
                                             ?: value
                                     },
+                                    prefix = {
+                                        Text(
+                                            when (localIndex) {
+                                                0 -> "R"
+                                                1 -> "G"
+                                                2 -> "B"
+                                                3 -> "A"
+                                                else -> ""
+                                            }
+                                        )
+                                    },
                                     suffix = { Text("F") },
                                     keyboardOptions = KeyboardOptions(
                                         keyboardType = KeyboardType.Number
