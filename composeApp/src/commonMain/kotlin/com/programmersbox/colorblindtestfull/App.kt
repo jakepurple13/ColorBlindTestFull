@@ -33,6 +33,7 @@ import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.ColorMatrix
 import androidx.compose.ui.graphics.ColorMatrixColorFilter
 import androidx.compose.ui.graphics.ImageBitmap
@@ -83,14 +84,17 @@ fun App() {
 
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.spacedBy(4.dp),
                 modifier = Modifier
                     .padding(padding)
+                    .padding(vertical = 4.dp)
                     .fillMaxSize(),
             ) {
                 Box(
                     modifier = Modifier
                         .fillMaxWidth(.3f)
                         .aspectRatio(1f)
+                        .clip(MaterialTheme.shapes.medium)
                         .clickable(
                             indication = LocalIndication.current,
                             interactionSource = remember { MutableInteractionSource() }
@@ -108,6 +112,9 @@ fun App() {
                         colorFilter = ColorMatrixColorFilter(ColorMatrix(colorFilter.toFloatArray())),
                     )
                 }
+                Button(
+                    onClick = { filePicker.launch() }
+                ) { Text("Select Image") }
 
                 Text("Values must be between 0.0 and 1.0")
 
