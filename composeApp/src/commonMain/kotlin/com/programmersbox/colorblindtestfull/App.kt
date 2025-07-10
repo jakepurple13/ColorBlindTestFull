@@ -91,6 +91,7 @@ fun App() {
                     .fillMaxSize(),
             ) {
                 Box(
+                    contentAlignment = Alignment.Center,
                     modifier = Modifier
                         .fillMaxWidth(.3f)
                         .aspectRatio(1f)
