@@ -22,7 +22,9 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.grid.itemsIndexed
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ImportExport
 import androidx.compose.material3.Button
@@ -118,7 +120,8 @@ fun App() {
                 modifier = Modifier
                     .padding(padding)
                     .padding(vertical = 4.dp)
-                    .fillMaxSize(),
+                    .fillMaxSize()
+                    .verticalScroll(rememberScrollState()),
             ) {
                 Row(
                     horizontalArrangement = Arrangement.SpaceAround,
@@ -179,14 +182,15 @@ fun App() {
 
                 Text("Values must be between 0.0 and 1.0")
 
-                LazyVerticalGrid(
-                    columns = GridCells.Fixed(5)
-                ) {
-                    colorFilter
-                        .toList()
-                        .chunked(5)
-                        .forEachIndexed { chunkIndex, list ->
-                            itemsIndexed(list) { localIndex, value ->
+                colorFilter
+                    .toList()
+                    .chunked(5)
+                    .forEachIndexed { chunkIndex, list ->
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            list.forEachIndexed {localIndex, value ->
                                 val absoluteIndex = chunkIndex * 5 + localIndex
                                 OutlinedTextField(
                                     value = value.toString(),
@@ -210,11 +214,12 @@ fun App() {
                                     suffix = { Text("F") },
                                     keyboardOptions = KeyboardOptions(
                                         keyboardType = KeyboardType.Number
-                                    )
+                                    ),
+                                    modifier = Modifier.weight(1f)
                                 )
                             }
                         }
-                }
+                    }
             }
         }
     }
