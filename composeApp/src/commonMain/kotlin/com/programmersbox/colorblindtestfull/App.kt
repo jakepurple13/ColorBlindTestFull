@@ -3,8 +3,12 @@ package com.programmersbox.colorblindtestfull
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.LocalIndication
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.aspectRatio
@@ -31,6 +35,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorMatrix
 import androidx.compose.ui.graphics.ColorMatrixColorFilter
+import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.graphics.decodeToImageBitmap
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import org.jetbrains.compose.resources.painterResource
@@ -39,6 +45,10 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 import colorblindtestfull.composeapp.generated.resources.Res
 import colorblindtestfull.composeapp.generated.resources.compose_multiplatform
 import colorblindtestfull.composeapp.generated.resources.ishihara_color_blindness_test
+import io.github.vinceglb.filekit.dialogs.FileKitType
+import io.github.vinceglb.filekit.dialogs.compose.rememberFilePickerLauncher
+import io.github.vinceglb.filekit.readBytes
+import kotlinx.coroutines.launch
 
 @Composable
 @Preview
@@ -56,20 +66,48 @@ fun App() {
                 }
             }
 
+            var bitmap by remember { mutableStateOf<ImageBitmap?>(null) }
+
+            val scope = rememberCoroutineScope()
+
+            val filePicker = rememberFilePickerLauncher(
+                type = FileKitType.Image,
+            ) { file ->
+                scope.launch {
+                    file
+                        ?.readBytes()
+                        ?.decodeToImageBitmap()
+                        ?.let { bitmap = it }
+                }
+            }
+
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier
                     .padding(padding)
                     .fillMaxSize(),
             ) {
-                Image(
-                    painter = painterResource(Res.drawable.ishihara_color_blindness_test),
-                    null,
-                    colorFilter = ColorMatrixColorFilter(ColorMatrix(colorFilter.toFloatArray())),
+                Box(
                     modifier = Modifier
                         .fillMaxWidth(.3f)
                         .aspectRatio(1f)
-                )
+                        .clickable(
+                            indication = LocalIndication.current,
+                            interactionSource = remember { MutableInteractionSource() }
+                        ) { filePicker.launch() }
+                ) {
+                    bitmap?.let {
+                        Image(
+                            it,
+                            null,
+                            colorFilter = ColorMatrixColorFilter(ColorMatrix(colorFilter.toFloatArray())),
+                        )
+                    } ?: Image(
+                        painter = painterResource(Res.drawable.ishihara_color_blindness_test),
+                        null,
+                        colorFilter = ColorMatrixColorFilter(ColorMatrix(colorFilter.toFloatArray())),
+                    )
+                }
 
                 Text("Values must be between 0.0 and 1.0")
 

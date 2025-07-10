@@ -44,6 +44,9 @@ kotlin {
             implementation(compose.components.uiToolingPreview)
             implementation(libs.androidx.lifecycle.viewmodel)
             implementation(libs.androidx.lifecycle.runtimeCompose)
+            val filekit = "0.10.0-beta04"
+            implementation("io.github.vinceglb:filekit-core:${filekit}")
+            implementation("io.github.vinceglb:filekit-dialogs-compose:${filekit}")
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
