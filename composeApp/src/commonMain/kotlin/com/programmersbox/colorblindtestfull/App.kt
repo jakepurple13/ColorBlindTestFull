@@ -86,15 +86,6 @@ fun App() {
             topBar = {
                 TopAppBar(
                     title = { Text("Color Blindness Test") },
-                    actions = {
-                        IconButton(
-                            onClick = {
-                                clipboard.setText(
-                                    AnnotatedString("floatArrayOf(${colorFilter.joinToString(",")})")
-                                )
-                            }
-                        ) { Icon(Icons.Default.ImportExport, null) }
-                    }
                 )
             },
         ) { padding ->
@@ -165,14 +156,26 @@ fun App() {
                     }
 
                     Column(
-                        verticalArrangement = Arrangement.spacedBy(4.dp)
+                        verticalArrangement = Arrangement.spacedBy(4.dp),
+                        horizontalAlignment = Alignment.End
                     ) {
                         Button(
                             onClick = { filePicker.launch() }
                         ) { Text("Select Image") }
+
                         Button(
                             onClick = { bitmap = null }
                         ) { Text("Reset Image") }
+
+                        Button(
+                            onClick = {
+                                clipboard.setText(
+                                    AnnotatedString(
+                                        "floatArrayOf(${colorFilter.joinToString(",") { "${it}f" }})"
+                                    )
+                                )
+                            }
+                        ) { Text("Export Blindness") }
                     }
                 }
 
@@ -190,7 +193,7 @@ fun App() {
                             verticalAlignment = Alignment.CenterVertically,
                             modifier = Modifier.fillMaxWidth()
                         ) {
-                            list.forEachIndexed {localIndex, value ->
+                            list.forEachIndexed { localIndex, value ->
                                 val absoluteIndex = chunkIndex * 5 + localIndex
                                 OutlinedTextField(
                                     value = value.toString(),
